@@ -3,7 +3,7 @@
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QFile
-from main_window import MainWindow
+from program.main_window import MainWindow
 import sys
 
 

@@ -2,8 +2,8 @@
 # -*- coding:utf-8 -*-
 
 from PyQt5.QtCore import QFile
-import struct
-import resource_file
+from struct import unpack_from, pack
+import program.resource_file
 
 
 def load_resource(path: str):
@@ -30,28 +30,28 @@ class MapData(object):
             self._originalData = bytearray(file.read())
         else:
             self._originalData = load_resource(":/scene_data/{0:02d}.bin".format(scene_id))
-        self.landformsData = self._getLandformsData()
-        self.terrainData = self._getTerrainData()
-        self.valueData = self._getValueData()
-        self.positionData = self._getPositionData()
 
-    def _getLandformsData(self):
-        return list(struct.unpack_from("{0}B".format(22 * 21), self._originalData, 0))
+    @property
+    def landformsData(self):
+        return list(unpack_from("{0}B".format(22 * 21), self._originalData, 0))
 
-    def _getTerrainData(self):
-        return [data & 0x0F for data in struct.unpack_from("{0}B".format(22 * 20), self._originalData, 22 * 21)]
+    @property
+    def terrainData(self):
+        return [data & 0x0F for data in unpack_from("{0}B".format(22 * 20), self._originalData, 22 * 21)]
 
-    def _getValueData(self):
-        return [data >> 4 & 0x0F for data in struct.unpack_from("{0}B".format(22 * 20), self._originalData, 22 * 21)]
+    @property
+    def valueData(self):
+        return [data >> 4 & 0x0F for data in unpack_from("{0}B".format(22 * 20), self._originalData, 22 * 21)]
 
-    def _getPositionData(self):
-        return list(struct.unpack_from("{0}B".format(22 * 20), self._originalData, 22 * (21 + 20)))
+    @property
+    def positionData(self):
+        return list(unpack_from("{0}B".format(22 * 20), self._originalData, 22 * (21 + 20)))
 
     def saveFile(self, filename: str):
-        landforms_struct = struct.pack("{0}B".format(len(self.landformsData)), *self.landformsData)
+        landforms_struct = pack("{0}B".format(len(self.landformsData)), *self.landformsData)
         mid_data = [self.valueData[i] << 4 | self.terrainData[i] for i in range(len(self.terrainData))]
-        mid_struct = struct.pack("{0}B".format(len(self.terrainData)), *mid_data)
-        position_struct = struct.pack("{0}B".format(len(self.positionData)), *self.positionData)
+        mid_struct = pack("{0}B".format(len(self.terrainData)), *mid_data)
+        position_struct = pack("{0}B".format(len(self.positionData)), *self.positionData)
         data_struct = landforms_struct + mid_struct + position_struct
         with open(filename, "wb") as file:
             file.write(data_struct)

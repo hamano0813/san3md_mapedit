@@ -4,16 +4,21 @@
 from PyQt5.QtWidgets import QMainWindow, QAction, QActionGroup, QFileDialog, QColorDialog, QFontDialog, QMessageBox
 from PyQt5.QtCore import Qt, QRect, QCoreApplication, QFile, QProcess, QDir
 from PyQt5.QtGui import QPixmap, QColor, QFont, QIcon
-from hexagonal_map_widget import HexagonalMapWidget
-from sample_widget import LandformsSample, MidSample, PositionSample
-from parameter import MapData, S_NAME_LIST, L_QTY_LIST, T_NAME_LIST, P_NAME_LIST
+from program.hexagonal_map_widget import HexagonalMapWidget
+from program.sample_widget import LandformsSample, MidSample, PositionSample
+from program.parameter import MapData, S_NAME_LIST, L_QTY_LIST, T_NAME_LIST, P_NAME_LIST
 from functools import partial
-import resource_file
+from typing import List
 
 
+# noinspection PyUnresolvedReferences,PyCallByClass,PyArgumentList
 class MainWindow(QMainWindow):
     def __init__(self, *args):
         super(MainWindow, self).__init__(*args)
+        self.mapData: MapData = None
+        self.landformsQuantity: int = None
+        self.landformsBlocks: List[QPixmap] = None
+
         self.setAcceptDrops(True)
         self.setMouseTracking(True)
         self.setWindowFlags(Qt.WindowCloseButtonHint)
@@ -109,7 +114,7 @@ class MainWindow(QMainWindow):
         self.landformsSample.triggered.connect(self.openLandformsSampleWindow)
         self.editMenu.addAction(self.landformsSample)
 
-        self.midSample =  QAction("地形和防守权重", self)
+        self.midSample = QAction("地形和防守权重", self)
         self.midSample.setCheckable(True)
         self.midSample.triggered.connect(self.openMidSampleWindow)
         self.editMenu.addAction(self.midSample)
@@ -256,7 +261,7 @@ class MainWindow(QMainWindow):
         for block_id in range(len(p_data)):
             self.centralWidget().positionLayer.cells[block_id].setText(P_NAME_LIST[p_data[block_id]])
 
-    def loadSceneDataCustomFile(self):
+    def loadSceneDataCustomFile(self, scene_filename: str=None):
         file_path = QFileDialog.getOpenFileName(self, "选择地图文件", "./", "All Files (*)")[0]
         if file_path:
             self.sceneID = 255

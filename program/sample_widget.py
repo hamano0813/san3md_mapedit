@@ -4,7 +4,7 @@
 from PyQt5.QtWidgets import QWidget, QLabel
 from PyQt5.QtGui import QDrag, QFont
 from PyQt5.QtCore import Qt, QMimeData
-from parameter import T_NAME_LIST, S_NAME_LIST
+from program.parameter import T_NAME_LIST, S_NAME_LIST
 import math
 
 
@@ -44,14 +44,14 @@ class LandformsSample(QWidget):
         self.setAcceptDrops(True)
         self.setWindowFlags(Qt.SubWindow | Qt.WindowStaysOnTopHint)
         self.landformsBlocks = landforms_blocks
-        self.landfromsQuantity = landforms_quantity
+        self.landformsQuantity = landforms_quantity
         self.cellSize = cell_size
-        self.setFixedSize((self.cellSize + 1) * 16, (self.cellSize + 1) * (math.ceil(self.landfromsQuantity / 16)))
+        self.setFixedSize((self.cellSize + 1) * 16, (self.cellSize + 1) * (math.ceil(self.landformsQuantity / 16)))
         self.setWindowTitle("地貌")
         self.initUI()
 
     def initUI(self):
-        for block_id in range(self.landfromsQuantity):
+        for block_id in range(self.landformsQuantity):
             cell = DataLabel(self)
             cell.setPixmap(self.landformsBlocks[block_id])
             cell.setData("landforms.{0}".format(block_id))
