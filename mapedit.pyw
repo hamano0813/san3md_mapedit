@@ -6,7 +6,6 @@ from PyQt5.QtCore import QFile
 from program.main_window import MainWindow
 import sys
 
-
 app = QApplication(sys.argv)
 file = QFile(":/QSS/black.qss")
 file.open(QFile.ReadOnly)

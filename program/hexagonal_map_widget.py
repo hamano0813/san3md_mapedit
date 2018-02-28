@@ -13,8 +13,8 @@ class _HexagonalWidget(QWidget):
         self.cellSize: int = 32
         self.cells: List[QLabel] = []
         self.setFixedSize(self.cellSize * 22, self.cellSize * 20)
-        self.textFont: QFont = None
-        self.textColor: QColor = None
+        self.textFont = None
+        self.textColor = None
         self._initUI()
 
     def _initUI(self):
@@ -57,7 +57,7 @@ class _HexagonalInterpolationWidget(_HexagonalWidget):
 
     def _interpolationUI(self):
         for col in range(22):
-            cell: QLabel = QLabel(self)
+            cell = QLabel(self)
             cell.setFixedSize(self.cellSize, self.cellSize)
             self.cells.append(cell)
             cell.move(col % 11 * self.cellSize * 2 + self.cellSize, col // 11 * self.cellSize * 20 - self.cellSize // 2)
@@ -66,7 +66,7 @@ class _HexagonalInterpolationWidget(_HexagonalWidget):
 class _HexagonalBorderWidget(_HexagonalInterpolationWidget):
     def __init__(self, *args):
         super(_HexagonalBorderWidget, self).__init__(*args)
-        self.usualColor: str = None
+        self.usualColor = None
 
     def setUsualColor(self, color):
         self.usualColor: str = color.name()
@@ -86,19 +86,19 @@ class HexagonalMapWidget(QWidget):
         self.setFixedSize(self.landformsLayer.size())
 
     def _landformsLayer(self):
-        self.landformsLayer: _HexagonalBorderWidget = _HexagonalInterpolationWidget(self)
+        self.landformsLayer = _HexagonalInterpolationWidget(self)
         self.cellSize: int = self.landformsLayer.cellSize
 
     def _borderLayer(self):
-        self.borderLayer: _HexagonalBorderWidget = _HexagonalBorderWidget(self)
+        self.borderLayer = _HexagonalBorderWidget(self)
 
     def _terrainLayer(self):
-        self.terrainLayer: _HexagonalWidget = _HexagonalWidget(self)
+        self.terrainLayer = _HexagonalWidget(self)
 
     def _valueLayer(self):
-        self.valueLayer: _HexagonalWidget = _HexagonalWidget(self)
+        self.valueLayer = _HexagonalWidget(self)
 
     def _positionLayer(self):
-        self.positionLayer: _HexagonalWidget = _HexagonalWidget(self)
+        self.positionLayer = _HexagonalWidget(self)
         for cell in self.positionLayer.cells:
             cell.setWordWrap(True)
