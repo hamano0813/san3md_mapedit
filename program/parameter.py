@@ -47,7 +47,7 @@ class MapData(object):
 
     def saveFile(self, filename: str):
         landforms_struct = pack(f"{len(self.landformsData)}B", *self.landformsData)
-        mid_data: List[int] = [self.valueData[i] << 4 | self.terrainData[i] for i in range(len(self.terrainData))]
+        mid_data: List[int] = [value << 4 | terrain for value, terrain in zip(self.valueData, self.terrainData)]
         mid_struct = pack(f"{len(self.terrainData)}B", *mid_data)
         position_struct = pack(f"{len(self.positionData)}B", *self.positionData)
         data_struct = landforms_struct + mid_struct + position_struct

@@ -2,8 +2,9 @@
 # -*- coding:utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget, QLabel
-from PyQt5.QtGui import QDrag, QFont
+from PyQt5.QtGui import QDrag, QFont, QPixmap
 from PyQt5.QtCore import Qt, QMimeData
+from typing import List
 from program.parameter import T_NAME_LIST, S_NAME_LIST
 import math
 
@@ -14,7 +15,7 @@ class DataLabel(QLabel):
         self.setAcceptDrops(True)
         self.mappedData = None
 
-    def setData(self, data):
+    def setData(self, data: str):
         self.mappedData = data
 
     def mousePressEvent(self, QEvent):
@@ -39,7 +40,7 @@ class DataLabel(QLabel):
 
 
 class LandformsSample(QWidget):
-    def __init__(self, landforms_blocks, landforms_quantity, cell_size, *args):
+    def __init__(self, landforms_blocks: List[QPixmap], landforms_quantity: int, cell_size: int, *args):
         super(LandformsSample, self).__init__(*args)
         self.setAcceptDrops(True)
         self.setWindowFlags(Qt.SubWindow | Qt.WindowStaysOnTopHint)
@@ -54,13 +55,13 @@ class LandformsSample(QWidget):
         for block_id in range(self.landformsQuantity):
             cell = DataLabel(self)
             cell.setPixmap(self.landformsBlocks[block_id])
-            cell.setData("landforms.{0}".format(block_id))
+            cell.setData(f"landforms.{block_id}")
             cell.setFixedSize(self.cellSize, self.cellSize)
             cell.move(block_id % 16 * (self.cellSize + 1), block_id // 16 * (self.cellSize + 1))
 
 
 class MidSample(QWidget):
-    def __init__(self, cell_size, terrain_text_color, value_text_color, *args):
+    def __init__(self, cell_size: int, terrain_text_color: str, value_text_color: str, *args):
         super(MidSample, self).__init__(*args)
         self.setAcceptDrops(True)
         self.setWindowFlags(Qt.SubWindow | Qt.WindowStaysOnTopHint)
@@ -74,14 +75,14 @@ class MidSample(QWidget):
         self.initUI()
 
     def initUI(self):
-        for terrain_id in range(len(self.terrainList)):
+        for terrain_id, terrain_text in enumerate(self.terrainList):
             cell = DataLabel(self)
             cell.setFixedSize(self.cellSize, self.cellSize)
             cell.setFont(QFont("微软雅黑", 16))
             cell.setAlignment(Qt.AlignCenter)
-            cell.setText(self.terrainList[terrain_id])
-            cell.setStyleSheet("border: 2px double black; color: {0};".format(self.terrainTextColor))
-            cell.setData("terrain.{0}".format(terrain_id))
+            cell.setText(terrain_text)
+            cell.setStyleSheet(f"border: 2px double black; color: {self.terrainTextColor};")
+            cell.setData(f"terrain.{terrain_id}")
             cell.move(5, 5 + terrain_id * (self.cellSize + 1))
 
         for value_id in range(16):
@@ -89,9 +90,9 @@ class MidSample(QWidget):
             cell.setFixedSize(self.cellSize, self.cellSize)
             cell.setFont(QFont("微软雅黑", 16))
             cell.setAlignment(Qt.AlignCenter)
-            cell.setText("{0:d}".format(value_id))
-            cell.setStyleSheet("border: 2px double black; color: {0};".format(self.valueTextColor))
-            cell.setData("value.{0}".format(value_id))
+            cell.setText(f"{value_id:d}")
+            cell.setStyleSheet(f"border: 2px double black; color: {self.valueTextColor};")
+            cell.setData(f"value.{value_id}")
             cell.move(10 + self.cellSize, 5 + value_id * (self.cellSize + 1))
 
 
@@ -107,14 +108,14 @@ class PositionSample(QWidget):
         self.initUI()
 
     def initUI(self):
-        for position_id in range(len(self.positionList)):
+        for position_id, position_text in enumerate(self.positionList):
             cell = DataLabel(self)
             cell.setFixedSize(80, 30)
             cell.setFont(QFont("微软雅黑", 10))
             cell.setAlignment(Qt.AlignVCenter)
-            cell.setText("{0}.{1}".format(position_id + 1, self.positionList[position_id]))
+            cell.setText(f"{position_id+1}.{position_text}")
             cell.setStyleSheet("color: white; border: 1px double black")
-            cell.setData("position.{0}".format(position_id))
+            cell.setData(f"position.{position_id}")
             cell.move(position_id % 10 * 81, position_id // 10 * 32)
         none_cell = DataLabel(self)
         none_cell.setFixedSize(80, 30)

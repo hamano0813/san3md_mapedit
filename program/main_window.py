@@ -11,13 +11,16 @@ from functools import partial
 from typing import List
 
 
-# noinspection PyUnresolvedReferences,PyCallByClass,PyArgumentList
+# noinspection PyUnresolvedReferences,PyArgumentList,PyCallByClass
 class MainWindow(QMainWindow):
     def __init__(self, *args):
         super(MainWindow, self).__init__(*args)
         self.mapData: MapData = None
         self.landformsQuantity: int = None
         self.landformsBlocks: List[QPixmap] = None
+        self.landformsSampleWindow = None
+        self.midSampleWindow = None
+        self.positionSampleWindow = None
 
         self.setAcceptDrops(True)
         self.setMouseTracking(True)
@@ -68,7 +71,7 @@ class MainWindow(QMainWindow):
         landforms_action_group.addAction(load_landforms_custom)
         self.loadLandformsMenu.addSeparator()
         for landforms_id in range(len(L_QTY_LIST)):
-            load_landforms_id = QAction("第{0}组默认地貌".format(landforms_id + 1), self)
+            load_landforms_id = QAction(f"第{landforms_id + 1}组默认地貌", self)
             load_landforms_id.triggered.connect(partial(self.loadLandformsID, landforms_id))
             load_landforms_id.setCheckable(True)
             self.loadLandformsMenu.addAction(load_landforms_id)
@@ -205,7 +208,7 @@ class MainWindow(QMainWindow):
         self.otherMenu.addAction(about)
 
     def loadLandformsID(self, blocks_id: int):
-        landforms_image = QPixmap(":/landforms/landforms{0}.png".format(blocks_id))
+        landforms_image = QPixmap(f":/landforms/landforms{blocks_id}.png")
         self.landformsQuantity = L_QTY_LIST[blocks_id]
         self.landformsBlocks = []
         for block_id in range(self.landformsQuantity):
@@ -247,7 +250,7 @@ class MainWindow(QMainWindow):
     def loadSceneDataID(self, scene_id):
         self.sceneID = scene_id
         self.mapData = MapData(scene_id)
-        self.setWindowTitle("{0} - {1}".format("三国志III MD版地图编辑器", S_NAME_LIST[self.sceneID]))
+        self.setWindowTitle(f"三国志III MD版地图编辑器 - {S_NAME_LIST[self.sceneID]}")
         l_data = self.mapData.landformsData
         for block_id in range(len(l_data)):
             self.centralWidget().landformsLayer.cells[block_id].setPixmap(self.landformsBlocks[l_data[block_id]])
@@ -377,7 +380,8 @@ class MainWindow(QMainWindow):
         else:
             self.positionSampleWindow.close()
 
-    def openExtractProgram(self):
+    @staticmethod
+    def openExtractProgram():
         exe_path = f"{QDir().currentPath()}/压缩解压.exe"
         QFile.copy(QFile(":/exe/compress.exe"), exe_path)
         process = QProcess()
@@ -411,7 +415,7 @@ class MainWindow(QMainWindow):
             else:
                 row = ((QEvent.pos().y() - self.menuBarHeight) - self.cellSize // 2) // self.cellSize
                 col = x
-            self.statusBar().showMessage("({0}, {1})".format(row, col))
+            self.statusBar().showMessage(f"({row}, {col})")
         else:
             self.statusBar().clearMessage()
 
@@ -437,7 +441,7 @@ class MainWindow(QMainWindow):
                 else:
                     row = ((QEvent.pos().y() - self.menuBarHeight) - self.cellSize // 2) // self.cellSize
                     col = x
-                self.statusBar().showMessage("(拖放到{0}, {1})".format(row, col))
+                self.statusBar().showMessage(f"(拖放到{row}, {col})")
                 QEvent.accept()
             else:
                 self.statusBar().clearMessage()
@@ -459,9 +463,9 @@ class MainWindow(QMainWindow):
             else:
                 row = ((QEvent.pos().y() - self.menuBarHeight) - self.cellSize // 2) // self.cellSize
                 col = x
-            if self.sceneID is not None:
-                layer = QEvent.mimeData().text().split(".")[0]
-                data = int(QEvent.mimeData().text().split(".")[1])
+            if self.sceneID:
+                layer, data = QEvent.mimeData().text().split(".")
+                data = int(data)
                 if layer == "landforms":
                     self.centralWidget().landformsLayer.cells[row * 22 + col].setPixmap(self.landformsBlocks[data])
                     self.mapData.landformsData[row * 22 + col] = data
@@ -477,6 +481,3 @@ class MainWindow(QMainWindow):
             QEvent.accept()
         else:
             QEvent.ignore()
-
-    def closeEvent(self, QEvent):
-        QCoreApplication.quit()
