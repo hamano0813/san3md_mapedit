@@ -4,7 +4,7 @@
 from PyQt5.QtCore import QFile
 from struct import unpack_from, pack
 from typing import List
-import program.resource_file
+import program.rec
 
 
 def load_resource(path: str)->bytearray:

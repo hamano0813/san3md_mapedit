@@ -9,6 +9,7 @@ from program.sample_widget import LandformsSample, MidSample, PositionSample
 from program.parameter import MapData, S_NAME_LIST, L_QTY_LIST, T_NAME_LIST, P_NAME_LIST
 from functools import partial
 from typing import List
+import program.rec
 
 
 # noinspection PyUnresolvedReferences,PyArgumentList,PyCallByClass
