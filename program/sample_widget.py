@@ -70,7 +70,7 @@ class MidSample(QWidget):
         self.terrainTextColor = terrain_text_color
         self.valueTextColor = value_text_color
         self.setStyleSheet("background-color: gray;")
-        self.setFixedSize(self.cellSize * 2 + 15, (self.cellSize + 1) * 16 + 10)
+        self.setFixedSize((self.cellSize + 1) * 16 + 10, self.cellSize * 2 + 15)
         self.setWindowTitle("地形和防守权重")
         self.initUI()
 
@@ -84,6 +84,7 @@ class MidSample(QWidget):
             cell.setStyleSheet(f"border: 2px double black; color: {self.terrainTextColor};")
             cell.setData(f"terrain.{terrain_id}")
             cell.move(5, 5 + terrain_id * (self.cellSize + 1))
+            cell.move(5 + terrain_id * (self.cellSize + 1), 5)
 
         for value_id in range(16):
             cell = DataLabel(self)
@@ -94,6 +95,7 @@ class MidSample(QWidget):
             cell.setStyleSheet(f"border: 2px double black; color: {self.valueTextColor};")
             cell.setData(f"value.{value_id}")
             cell.move(10 + self.cellSize, 5 + value_id * (self.cellSize + 1))
+            cell.move(5 + value_id * (self.cellSize + 1), 10 + self.cellSize)
 
 
 class PositionSample(QWidget):

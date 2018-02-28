@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 from PyQt5.QtWidgets import QMainWindow, QAction, QActionGroup, QFileDialog, QColorDialog, QFontDialog, QMessageBox
-from PyQt5.QtCore import Qt, QRect, QCoreApplication, QFile, QProcess, QDir
+from PyQt5.QtCore import Qt, QRect, QFile, QProcess, QDir
 from PyQt5.QtGui import QPixmap, QColor, QFont, QIcon
 from program.hexagonal_map_widget import HexagonalMapWidget
 from program.sample_widget import LandformsSample, MidSample, PositionSample
@@ -21,13 +21,10 @@ class MainWindow(QMainWindow):
         self.landformsSampleWindow = None
         self.midSampleWindow = None
         self.positionSampleWindow = None
-
-        self.setAcceptDrops(True)
-        self.setMouseTracking(True)
-        self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.sceneID = None
         self.sceneFilename = None
         self.menuBarHeight = 28
+
         self._initHexagonalMap()
         self._initFileMenu()
         self._initEditMenu()
@@ -35,6 +32,10 @@ class MainWindow(QMainWindow):
         self._initColorMenu()
         self._initDisplayMenu()
         self._initOtherMenu()
+
+        self.setAcceptDrops(True)
+        self.setMouseTracking(True)
+        self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setWindowIcon(QIcon(QPixmap(":/icon/icon.png").scaled(32, 32)))
         self.setFixedSize(self.cellSize * 22, self.cellSize * 20 + 50)
         self.show()
