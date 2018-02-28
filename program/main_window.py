@@ -262,10 +262,13 @@ class MainWindow(QMainWindow):
             self.centralWidget().positionLayer.cells[block_id].setText(P_NAME_LIST[p_data[block_id]])
 
     def loadSceneDataCustomFile(self, scene_filename: str=None):
-        file_path = QFileDialog.getOpenFileName(self, "选择地图文件", "./", "All Files (*)")[0]
+        if scene_filename:
+            file_path = scene_filename
+        else:
+            file_path = QFileDialog.getOpenFileName(self, "选择地图文件", "./", "All Files (*)")[0]
+            self.sceneFilename = file_path
         if file_path:
             self.sceneID = 255
-            self.sceneFilename = file_path
             self.mapData = MapData(0, file_path)
             l_data = self.mapData.landformsData
             for block_id in range(len(l_data)):
@@ -375,8 +378,8 @@ class MainWindow(QMainWindow):
             self.positionSampleWindow.close()
 
     def openExtractProgram(self):
-        exe_path = "{0}/压缩解压.exe".format(QDir().currentPath())
-        QFile.copy(":/exe/compress.exe", exe_path)
+        exe_path = f"{QDir().currentPath()}/压缩解压.exe"
+        QFile.copy(QFile(":/exe/compress.exe"), exe_path)
         process = QProcess()
         process.startDetached(exe_path)
 
