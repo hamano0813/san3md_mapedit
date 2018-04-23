@@ -7,9 +7,9 @@ from program.main_window import MainWindow
 import sys
 
 app = QApplication(sys.argv)
-file = QFile(":/QSS/black.qss")
+file = QFile(':/QSS/black.qss')
 file.open(QFile.ReadOnly)
-stylesheet = bytearray(file.readAll()).decode("UTF-8")
+stylesheet = bytearray(file.readAll()).decode('UTF-8')
 app.setStyleSheet(stylesheet)
 window = MainWindow()
 sys.exit(app.exec_())

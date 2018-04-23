@@ -6,26 +6,30 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor
 from typing import List
 
+SIZE = 32
+WIDTH = 22
+HEIGHT = 20
+
 
 class _HexagonalWidget(QWidget):
     def __init__(self, *args):
         super(_HexagonalWidget, self).__init__(*args)
-        self.cellSize: int = 32
+        self.cellSize: int = SIZE
         self.cells: List[QLabel] = []
-        self.setFixedSize(self.cellSize * 22, self.cellSize * 20)
-        self.textFont = None
-        self.textColor = None
+        self.setFixedSize(self.cellSize * WIDTH, self.cellSize * HEIGHT)
+        self.textFont: QFont = None
+        self.textColor: QColor = None
         self._initUI()
 
     def _initUI(self):
-        for row in range(20):
-            for col in range(22):
+        for row in range(HEIGHT):
+            for col in range(WIDTH):
                 cell: QLabel = QLabel(self)
                 cell.setFixedSize(self.cellSize, self.cellSize)
                 self.cells.append(cell)
                 if col % 2 is 0:
                     cell.move(self.cellSize * col, self.cellSize * row)
-                elif row is 19:
+                elif row is (HEIGHT - 1):
                     cell.move(self.cellSize * col, self.cellSize * row + self.cellSize // 2)
                     cell.setVisible(False)
                 else:
@@ -43,7 +47,7 @@ class _HexagonalWidget(QWidget):
     def setTextColor(self, color: QColor):
         self.textColor = color.name()
         for cell in self.cells:
-            cell.setStyleSheet(f"color: {self.textColor};")
+            cell.setStyleSheet(f'color: {self.textColor};')
 
     def setTextMargin(self, margin: int):
         for cell in self.cells:
@@ -56,11 +60,12 @@ class _HexagonalInterpolationWidget(_HexagonalWidget):
         self._interpolationUI()
 
     def _interpolationUI(self):
-        for col in range(22):
+        for col in range(WIDTH):
             cell = QLabel(self)
             cell.setFixedSize(self.cellSize, self.cellSize)
             self.cells.append(cell)
-            cell.move(col % 11 * self.cellSize * 2 + self.cellSize, col // 11 * self.cellSize * 20 - self.cellSize // 2)
+            cell.move(col % (WIDTH // 2) * self.cellSize * 2 + self.cellSize,
+                      col // (WIDTH // 2) * self.cellSize * HEIGHT - self.cellSize // 2)
 
 
 class _HexagonalBorderWidget(_HexagonalInterpolationWidget):
@@ -71,7 +76,7 @@ class _HexagonalBorderWidget(_HexagonalInterpolationWidget):
     def setUsualColor(self, color):
         self.usualColor: str = color.name()
         for cell in self.cells:
-            cell.setStyleSheet(f"border:1px solid {self.usualColor};")
+            cell.setStyleSheet(f'border:1px solid {self.usualColor};')
 
 
 class HexagonalMapWidget(QWidget):
